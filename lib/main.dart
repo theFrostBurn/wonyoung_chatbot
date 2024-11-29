@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';  // SystemChrome 사용을 위한 import
 import 'views/screens/chat_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();  // Flutter 바인딩 초기화
+  
+  // 시스템 UI 설정
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
+  
   runApp(const MyApp());
 }
 

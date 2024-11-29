@@ -14,6 +14,7 @@ class ChatScreen extends StatelessWidget {
       create: (_) => ChatViewModel(),
       child: Scaffold(
         backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text(
             'AI 채팅',
@@ -32,15 +33,18 @@ class ChatScreen extends StatelessWidget {
             ),
           ),
         ),
-        body: SafeArea(
-          bottom: false, // 하단 SafeArea 비활성화
-          child: Column(
-            children: [
-              const Expanded(
-                child: MessageList(),
-              ),
-              ChatInput(),
-            ],
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                const Expanded(
+                  child: MessageList(),
+                ),
+                ChatInput(),
+              ],
+            ),
           ),
         ),
       ),

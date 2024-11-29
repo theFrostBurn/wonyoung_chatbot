@@ -30,7 +30,6 @@ class _ChatInputState extends State<ChatInput> {
       _isComposing = false;
     });
     _controller.clear();
-    _focusNode.requestFocus();
   }
 
   @override
@@ -47,7 +46,7 @@ class _ChatInputState extends State<ChatInput> {
       ),
       child: Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 8,
           left: 16,
           right: 16,
           top: 8,
@@ -75,6 +74,7 @@ class _ChatInputState extends State<ChatInput> {
                     fontSize: 16,
                   ),
                   maxLines: null,
+                  minLines: 1,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     hintText: '메시지를 입력하세요',
@@ -88,8 +88,7 @@ class _ChatInputState extends State<ChatInput> {
                       vertical: 10,
                     ),
                   ),
-                  onSubmitted: (_) => _isComposing ? _sendMessage() : null,
-                  enableInteractiveSelection: true,
+                  onSubmitted: _isComposing ? (_) => _sendMessage() : null,
                 ),
               ),
             ),
