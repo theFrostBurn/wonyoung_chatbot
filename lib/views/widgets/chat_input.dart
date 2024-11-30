@@ -37,16 +37,17 @@ class _ChatInputState extends State<ChatInput> {
   Widget build(BuildContext context) {
     final isLoading = context.select<ChatViewModel, bool>((vm) => vm.isLoading);
 
-    return RawKeyboardListener(
-      focusNode: FocusNode(),
-      onKey: (event) {
-        if (event is RawKeyDownEvent &&
+    return Focus(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent &&
             event.logicalKey == LogicalKeyboardKey.enter &&
-            !event.isShiftPressed) {
+            !HardwareKeyboard.instance.isShiftPressed) {
           if (_isComposing && !isLoading) {
             _sendMessage();
+            return KeyEventResult.handled;
           }
         }
+        return KeyEventResult.ignored;
       },
       child: Container(
         decoration: BoxDecoration(
@@ -102,7 +103,8 @@ class _ChatInputState extends State<ChatInput> {
                         vertical: 10,
                       ),
                     ),
-                    onSubmitted: _isComposing ? (_) => _sendMessage() : null,
+                    onSubmitted: null,
+                    onEditingComplete: () {},
                   ),
                 ),
               ),
