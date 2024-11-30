@@ -17,7 +17,7 @@ class ChatScreen extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text(
-            'AI 채팅',
+            '원영적💖사고 채팅',
             style: TextStyle(
               color: Colors.black87,
               fontWeight: FontWeight.w600,
@@ -50,4 +50,4 @@ class ChatScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}
