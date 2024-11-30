@@ -35,11 +35,11 @@ class ChatScreen extends StatelessWidget {
         ),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: SafeArea(
+          child: const SafeArea(
             bottom: false,
             child: Column(
               children: [
-                const Expanded(
+                Expanded(
                   child: MessageList(),
                 ),
                 ChatInput(),
