@@ -3,7 +3,17 @@ import '../models/chat_message.dart';
 
 class ChatViewModel extends ChangeNotifier {
   final List<ChatMessage> _messages = [];
+  final Set<String> _animatedMessageIds = {};
+
   List<ChatMessage> get messages => _messages;
+
+  bool shouldAnimateMessage(String messageId) {
+    if (_animatedMessageIds.contains(messageId)) {
+      return false;
+    }
+    _animatedMessageIds.add(messageId);
+    return true;
+  }
 
   void sendMessage(String content) {
     if (content.trim().isEmpty) return;
@@ -18,7 +28,7 @@ class ChatViewModel extends ChangeNotifier {
     _messages.add(message);
     notifyListeners();
 
-    // 봇 응답 시뮬레이션 (나중에 실제 API 응답으로 대체)
+    // 봇 응답 시뮬레이션
     Future.delayed(const Duration(seconds: 1), () {
       final botMessage = ChatMessage(
         id: DateTime.now().toString(),

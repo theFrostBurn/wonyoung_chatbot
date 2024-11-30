@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';  // SystemChrome 사용을 위한 import
+import 'package:flutter/services.dart';
 import 'views/screens/chat_screen.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();  // Flutter 바인딩 초기화
+  WidgetsFlutterBinding.ensureInitialized();
   
-  // 시스템 UI 설정
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -28,8 +27,9 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF6B7280),
           primary: const Color(0xFF6B7280),
           secondary: const Color(0xFF9CA3AF),
-          background: Colors.white,
+          surface: Colors.white,
         ),
+        scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
       home: const ChatScreen(),

@@ -17,22 +17,12 @@ class MessageList extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
             final message = viewModel.messages[viewModel.messages.length - 1 - index];
-            return TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0.0, end: 1.0),
-              duration: const Duration(milliseconds: 350),
-              curve: Curves.easeOutQuart,
-              builder: (context, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: Transform.translate(
-                    offset: Offset(0, 20 * (1 - value)),
-                    child: child,
-                  ),
-                );
-              },
+            return KeyedSubtree(
+              key: ValueKey(message.id),
               child: ChatBubble(
                 message: message.content,
                 isUser: message.isUser,
+                messageId: message.id,
               ),
             );
           },
