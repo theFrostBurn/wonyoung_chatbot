@@ -24,7 +24,7 @@ class _ChatInputState extends State<ChatInput> {
 
   void _sendMessage() {
     if (_controller.text.trim().isEmpty) return;
-    
+
     context.read<ChatViewModel>().sendMessage(_controller.text);
     setState(() {
       _isComposing = false;
@@ -34,6 +34,8 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = context.select<ChatViewModel, bool>((vm) => vm.isLoading);
+
     return Container(
       decoration: BoxDecoration(
         color: CupertinoColors.systemBackground.resolveFrom(context),
@@ -98,14 +100,16 @@ class _ChatInputState extends State<ChatInput> {
               duration: const Duration(milliseconds: 200),
               child: CupertinoButton(
                 padding: const EdgeInsets.all(0),
-                onPressed: _isComposing ? _sendMessage : null,
-                child: Icon(
-                  CupertinoIcons.arrow_up_circle_fill,
-                  size: 32,
-                  color: _isComposing 
-                      ? CupertinoColors.activeBlue 
-                      : CupertinoColors.systemGrey3,
-                ),
+                onPressed: (_isComposing && !isLoading) ? _sendMessage : null,
+                child: isLoading
+                    ? const CupertinoActivityIndicator()
+                    : Icon(
+                        CupertinoIcons.arrow_up_circle_fill,
+                        size: 32,
+                        color: _isComposing
+                            ? CupertinoColors.activeBlue
+                            : CupertinoColors.systemGrey3,
+                      ),
               ),
             ),
           ],
@@ -113,4 +117,4 @@ class _ChatInputState extends State<ChatInput> {
       ),
     );
   }
-} 
+}
