@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/chat_viewmodel.dart';
 
@@ -36,83 +37,95 @@ class _ChatInputState extends State<ChatInput> {
   Widget build(BuildContext context) {
     final isLoading = context.select<ChatViewModel, bool>((vm) => vm.isLoading);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemBackground.resolveFrom(context),
-        border: Border(
-          top: BorderSide(
-            color: CupertinoColors.separator.resolveFrom(context),
-            width: 0.5,
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      onKey: (event) {
+        if (event is RawKeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.enter &&
+            !event.isShiftPressed) {
+          if (_isComposing && !isLoading) {
+            _sendMessage();
+          }
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          border: Border(
+            top: BorderSide(
+              color: CupertinoColors.separator.resolveFrom(context),
+              width: 0.5,
+            ),
           ),
         ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 8,
-          left: 16,
-          right: 16,
-          top: 8,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: CupertinoColors.systemGrey6.resolveFrom(context),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: TextField(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.send,
-                  onChanged: (text) {
-                    setState(() {
-                      _isComposing = text.isNotEmpty;
-                    });
-                  },
-                  style: const TextStyle(
-                    fontSize: 16,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 8,
+            left: 16,
+            right: 16,
+            top: 8,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.systemGrey6.resolveFrom(context),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  maxLines: null,
-                  minLines: 1,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    hintText: '메시지를 입력하세요',
-                    hintStyle: TextStyle(
-                      color: CupertinoColors.systemGrey.resolveFrom(context),
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.send,
+                    onChanged: (text) {
+                      setState(() {
+                        _isComposing = text.isNotEmpty;
+                      });
+                    },
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
+                    maxLines: null,
+                    minLines: 1,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      hintText: '메시지를 입력하세요',
+                      hintStyle: TextStyle(
+                        color: CupertinoColors.systemGrey.resolveFrom(context),
+                        fontSize: 16,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                     ),
+                    onSubmitted: _isComposing ? (_) => _sendMessage() : null,
                   ),
-                  onSubmitted: _isComposing ? (_) => _sendMessage() : null,
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
-            AnimatedOpacity(
-              opacity: _isComposing ? 1.0 : 0.5,
-              duration: const Duration(milliseconds: 200),
-              child: CupertinoButton(
-                padding: const EdgeInsets.all(0),
-                onPressed: (_isComposing && !isLoading) ? _sendMessage : null,
-                child: isLoading
-                    ? const CupertinoActivityIndicator()
-                    : Icon(
-                        CupertinoIcons.arrow_up_circle_fill,
-                        size: 32,
-                        color: _isComposing
-                            ? CupertinoColors.activeBlue
-                            : CupertinoColors.systemGrey3,
-                      ),
+              const SizedBox(width: 8),
+              AnimatedOpacity(
+                opacity: _isComposing ? 1.0 : 0.5,
+                duration: const Duration(milliseconds: 200),
+                child: CupertinoButton(
+                  padding: const EdgeInsets.all(0),
+                  onPressed: (_isComposing && !isLoading) ? _sendMessage : null,
+                  child: isLoading
+                      ? const CupertinoActivityIndicator()
+                      : Icon(
+                          CupertinoIcons.arrow_up_circle_fill,
+                          size: 32,
+                          color: _isComposing
+                              ? CupertinoColors.activeBlue
+                              : CupertinoColors.systemGrey3,
+                        ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
